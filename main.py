@@ -38,6 +38,12 @@ def validate_entry(text: str) -> None:
         )
     if "\n" in text or "\r" in text:
         raise ValueError("entry must be a single line (no newline characters)")
+    # No other control characters (e.g. \x01, \x7f): only plain printable text.
+    for ch in text:
+        if ord(ch) < 32 or ord(ch) == 127:
+            raise ValueError(
+                f"entry must not contain control character U+{ord(ch):04X}"
+            )
 
 
 def main() -> int:
